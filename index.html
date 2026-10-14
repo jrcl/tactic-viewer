@@ -3,9 +3,265 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visor de Tácticas</title>
+    <title>Biblioteca de Tácticas MZ</title>
+    <style>
+        /* Fondo general claro inspirado en la interfaz del juego */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #444;
+        }
+
+        /* Contenedor Grid Compacto */
+        .grid-tacticas {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
+            gap: 15px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        /* Tarjeta Estilo Historial ManagerZone */
+        .tarjeta-tactica {
+            background-color: #ffffff;
+            border: 1px solid #dddddd;
+            border-radius: 6px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.15s, box-shadow 0.15s;
+            position: relative;
+        }
+
+        .tarjeta-tactica:hover {
+            background-color: #f9f9f9;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* Dimensiones físicas reales de tu captura (218x332) */
+        .campo-mini {
+            width: 218px;
+            height: 332px;
+            background-image: url('cancha_mz.png');
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            position: relative;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            border-radius: 2px;
+        }
+
+        /* CONTENEDOR DEL JUGADOR: Anclado estrictamente a 22x22px */
+        .nodo-jugador {
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            transform: translate(-50%, -50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        /* BASE COMÚN PARA TODOS LOS PINES (22x22px con brillo acrílico) */
+        .jugador-punto {
+            width: 22px;
+            height: 22px;
+            border: 1.5px solid #ffffff; 
+            border-radius: 50%;
+            box-shadow: 0 2.5px 5px rgba(0, 0, 0, 0.45);
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* El destello plástico superior izquierdo común para todos */
+        .jugador-punto::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 4px;
+            width: 5px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            transform: rotate(-15deg);
+        }
+
+        /* VARIANTES DE COLOR ESTILO PIN DE OFICINA */
+        
+        /* 1. Defensores: Azul Plástico Solido */
+        .pin-defensa {
+            background: radial-gradient(circle at 30% 30%, #3b82f6 0%, #1d4ed8 65%, #1e3a8a 100%);
+        }
+
+        /* 2. Mediocampistas: Blanco Tiza Mate */
+        .pin-medio {
+            background: radial-gradient(circle at 30% 30%, #ffffff 0%, #cbd5e1 75%, #94a3b8 100%);
+            border: 1.5px solid #475569; /* Borde oscuro para contrastar el blanco */
+        }
+
+        /* 3. Delanteros: Rojo Plástico Vibrante */
+        .pin-ataque {
+            background: radial-gradient(circle at 30% 30%, #ff3333 0%, #d60000 65%, #800000 100%);
+        }
+
+        /* TEXTO ABSOLUTO DE COORDENADA */
+        .jugador-coordenada {
+            position: absolute;
+            top: 24px; 
+            font-size: 10px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.9), -1px -1px 2px rgba(0,0,0,0.9); 
+            white-space: nowrap;
+        }
+
+        .info-tactica {
+            width: 100%;
+            text-align: center;
+        }
+
+        .titulo-tactica {
+            font-size: 13px;
+            font-weight: bold;
+            margin: 0 0 2px 0;
+            color: #2b4e75;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .club-tactica {
+            font-size: 11px;
+            color: #666666;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Alerta flotante al copiar */
+        .alerta-flotante {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.85);
+            color: #ffffff;
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            display: none;
+            pointer-events: none;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+    </style>
 </head>
 <body>
-    <h1>¡Hola Mundo! Tu futuro visor de tácticas estará aquí.</h1>
+
+    <h1>Biblioteca de Tácticas MZ</h1>
+
+    <div class="grid-tacticas" id="contenedor-grid"></div>
+
+    <script>
+        fetch('tactics.json')
+            .then(response => response.json())
+            .then(data => {
+                const grid = document.getElementById('contenedor-grid');
+                
+                data.forEach((tactica) => {
+                    const tarjeta = document.createElement('div');
+                    tarjeta.className = 'tarjeta-tactica';
+                    tarjeta.onclick = () => copiarCoordenadas(tactica.coordenadas_raw, tarjeta);
+
+                    const alerta = document.createElement('div');
+                    alerta.className = 'alerta-flotante';
+                    alerta.textContent = '¡Copiado!';
+                    tarjeta.appendChild(alerta);
+
+                    const campo = document.createElement('div');
+                    campo.className = 'campo-mini';
+
+                    // LÓGICA DE CENTROS PERFECTA
+                    const centroX = 109; 
+                    const centroY = 166; 
+
+                    const pares = tactica.coordenadas_raw.split(" ");
+                    pares.forEach((par) => {
+                        const [x_mz, y_mz] = par.split(",").map(Number);
+                        
+                        const left_px = centroX + x_mz;
+                        const top_px = centroY - y_mz;
+
+                        const nodo = document.createElement('div');
+                        nodo.className = 'nodo-jugador';
+                        nodo.style.left = `${left_px}px`;
+                        nodo.style.top = `${top_px}px`;
+
+                        // Crear la esfera base
+                        const punto = document.createElement('div');
+                        punto.className = 'jugador-punto';
+
+                        // EVALUACIÓN MATEMÁTICA INTELIGENTE POR ZONAS (Eje Y)
+                        if (y_mz <= -50) {
+                            punto.classList.add('pin-defensa'); // Azul si Y es menor o igual a -50
+                        } else if (y_mz > 50 && y_mz <= 52) {
+                            punto.classList.add('pin-medio');   // Blanco si Y está entre 51 y 52
+                        } else if (y_mz > 52) {
+                            punto.classList.add('pin-ataque');  // Rojo si Y es mayor a 52
+                        } else {
+                            // Por si alguna táctica tiene un jugador de transición en el medio campo general (ej: Y=0)
+                            punto.classList.add('pin-medio'); 
+                        }
+
+                        nodo.appendChild(punto);
+
+                        const etiqueta = document.createElement('div');
+                        etiqueta.className = 'jugador-coordenada';
+                        etiqueta.textContent = `${x_mz} ${y_mz}`;
+                        nodo.appendChild(etiqueta);
+                        
+                        campo.appendChild(nodo);
+                    });
+                    tarjeta.appendChild(campo);
+
+                    const info = document.createElement('div');
+                    info.className = 'info-tactica';
+                    info.innerHTML = `
+                        <h2 class="titulo-tactica" title="${tactica.nombre}">${tactica.nombre}</h2>
+                        <p class="club-tactica" title="${tactica.clubs.join(', ')}">${tactica.clubs.join(', ')}</p>
+                    `;
+                    tarjeta.appendChild(info);
+
+                    grid.appendChild(tarjeta);
+                });
+            })
+            .catch(err => console.error("Error cargando el JSON: ", err));
+
+        function copiarCoordenadas(rawText, tarjeta) {
+            const textoFormateado = rawText.split(" ").join("\n");
+            navigator.clipboard.writeText(textoFormateado).then(() => {
+                const alerta = tarjeta.querySelector('.alerta-flotante');
+                alerta.style.display = 'block';
+                setTimeout(() => { alerta.style.display = 'none'; }, 1000);
+            });
+        }
+    </script>
 </body>
 </html>
