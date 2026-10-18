@@ -14,8 +14,8 @@
     {
       "id": 3,
       "nombre": "Panal 1 Wing",
-      "coordenadas_raw": "0,-80 -39,-55 39,-55 0,-30 -39,-5 39,-5 0,20 -20,68 20,91 -92,96",
-      "clubs": ["Team"]
+      "coordenadas_raw": "0,-86 -39,-61 39,-61 0,-36 -39,-11 39,-11 0,14 -25,53 19,83 -94,98",
+      "clubs": ["ꜱᴀᴊʀᴀꜱ ꜰᴄ"]
     },
     {
       "id": 4,
@@ -25,87 +25,111 @@
     },
     {
       "id": 5,
+      "nombre": "Piramide 2 Wings",
+      "coordenadas_raw": "-71,-62 -24,-62 23,-62 70,-62 -47,-22 0,-22 47,-22 70,52 -19,84 93,92",
+      "clubs": ["★ Lobos FC ★"]
+    },
+    {
+      "id": 6,
       "nombre": "433",
       "coordenadas_raw": "-72,-63 -25,-63 23,-63 70,-63 -23,-17 24,-17 0,24 26,62 -25,63 1,101",
       "clubs": ["Team"]
     },
     {
-      "id": 6,
+      "id": 7,
       "nombre": "Griega PC (Nave)",
       "coordenadas_raw": "-24,-73 23,-73 -64,-50 63,-50 -24,-26 23,-26 0,14 -23,54 24,54 0,94",
       "clubs": ["Team"]
     },
     {
-      "id": 7,
+      "id": 8,
       "nombre": "Griega 1 Wing",
       "coordenadas_raw": "-24,-73 23,-73 -65,-52 65,-52 -23,-27 24,-27 0,14 22,56 -18,84 93,96",
-      "clubs": ["Team"]
+      "clubs": ["Tabachana F.C."]
     },
     {
-      "id": 8,
+      "id": 9,
       "nombre": "Griega con Falso 9",
       "coordenadas_raw": "-23,-75 24,-75 -64,-52 64,-52 -24,-29 23,-29 0,11 18,83 -94,97 -25,101",
       "clubs": ["Team"]
     },
     {
-      "id": 9,
+      "id": 10,
       "nombre": "Espada",
       "coordenadas_raw": "-95,-59 -48,-59 0,-59 48,-59 95,-59 -24,-19 24,-19 0,21 15,66 -15,101",
       "clubs": ["Team"]
     },
     {
-      "id": 10,
+      "id": 11,
       "nombre": "Espada 1 Wing",
       "coordenadas_raw": "-47,-53 0,-53 47,-53 -93,-52 93,-52 -23,-13 24,-13 0,40 17,84 -93,92",
       "clubs": ["Team"]
     },
     {
-      "id": 11,
+      "id": 12,
       "nombre": "Espada 2 Wing",
       "coordenadas_raw": "-47,-57 0,-57 49,-57 -96,-53 96,-53 23,-17 -23,-16 68,47 -19,84 94,95",
       "clubs": ["Team"]
     },
     {
-      "id": 12,
+      "id": 13,
       "nombre": "Buque",
       "coordenadas_raw": "-48,-56 48,-56 0,-55 -94,-53 94,-53 -24,-15 23,-15 -24,33 23,33 0,73",
       "clubs": ["Team"]
     },
     {
-      "id": 13,
-      "nombre": "Turca Origin",
-      "coordenadas_raw": "-70,-63 -23,-63 24,-63 71,-63 0,-23 47,-23 0,24 25,66 -18,84 95,98",
-      "clubs": ["Team"]
-    },
-    {
       "id": 14,
-      "nombre": "Turca con Falso 9",
-      "coordenadas_raw": "-71,-61 -24,-61 23,-61 70,-61 -1,-21 47,-21 0,27 -18,83 26,101 92,101",
-      "clubs": ["Team"]
+      "nombre": "Turca Origin",
+      "coordenadas_raw": "-70,-61 -23,-61 24,-61 71,-61 -47,-21 0,-21 0,26 -25,66 19,84 -95,98",
+      "clubs": ["KaRaBaĞLaR !! - URAS"]
     },
     {
       "id": 15,
-      "nombre": "Turca 2 Wings",
-      "coordenadas_raw": "-71,-54 -24,-54 23,-54 70,-54 -47,-14 0,-14 0,33 -67,48 20,84 -95,90",
-      "clubs": ["Team"]
+      "nombre": "Turca con Falso 9",
+      "coordenadas_raw": "-71,-61 -24,-61 23,-61 70,-61 -1,-21 47,-21 0,27 -18,83 26,101 92,101",
+      "clubs": ["KIA KAHA"]
     },
     {
       "id": 16,
-      "nombre": "Acordeon 1 Wing",
-      "coordenadas_raw": "-48,-67 -1,-67 46,-67 -71,-27 -24,-27 23,-27 -1,13 -27,53 15,84 -91,88",
-      "clubs": ["Team"]
+      "nombre": "Turca 2 Wings",
+      "coordenadas_raw": "-71,-54 -24,-54 23,-54 70,-54 -47,-14 0,-14 0,33 -67,48 20,84 -95,90",
+      "clubs": ["A State Of Trance"]
     },
     {
       "id": 17,
+      "nombre": "Acordeon PC",
+      "coordenadas_raw": "-80,-68 -30,-68 20,-68 -5,-29 -56,-28 44,-28 0,25 31,62 -25,64 5,100",
+      "clubs": ["ʱᵒᶰᶹᶰᶢ ᶳᵏ"]
+    },
+    {
+      "id": 18,
+      "nombre": "Acordeon 1 Wing",
+      "coordenadas_raw": "-47,-68 0,-68 47,-68 -71,-28 -24,-28 23,-28 0,12 -17,55 19,84 -94,90",
+      "clubs": ["KIA KAHA"]
+    },
+    {
+      "id": 19,
       "nombre": "ContraSuprema PC",
       "coordenadas_raw": "-47,-63 0,-63 47,-63 94,-63 -24,-23 23,-23 70,-23 10,22 -10,66 20,101",
       "clubs": ["Team"]
     },
     {
-      "id": 18,
+      "id": 20,
       "nombre": "ContraSuprema 1 Wing",
       "coordenadas_raw": "-93,-63 -46,-63 1,-63 48,-63 -69,-23 -22,-23 25,-23 -20,60 20,85 -93,87",
       "clubs": ["Team"]
+    },
+    {
+      "id": 21,
+      "nombre": "Nuke",
+      "coordenadas_raw": "-70,-66 -23,-66 24,-66 71,-66 1,-26 -23,14 24,14 -23,61 24,61 1,101",
+      "clubs": ["Sacri"]
+    },
+    {
+      "id": 22,
+      "nombre": "Daga",
+      "coordenadas_raw": "-23,-58 24,-58 -93,-51 93,-51 -55,-24 55,-24 0,-18 0,29 -22,70 12,101",
+      "clubs": ["ʱᵒᶰᶹᶰᶢ ᶳᵏ"]
     }
   ]
   

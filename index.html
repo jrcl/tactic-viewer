@@ -154,6 +154,33 @@
             text-overflow: ellipsis;
         }
 
+        /* Botón para reflejar la táctica horizontalmente */
+        .boton-mirror {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 5;
+            padding: 6px 9px;
+            border: 1px solid #b8c7d8;
+            border-radius: 4px;
+            background: #ffffff;
+            color: #2b4e75;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+        }
+
+        .boton-mirror:hover {
+            background: #eaf2fb;
+        }
+
+        .boton-mirror.activo {
+            background: #2b4e75;
+            border-color: #2b4e75;
+            color: #ffffff;
+        }
+
         /* Alerta flotante al copiar */
         .alerta-flotante {
             position: absolute;
@@ -184,11 +211,16 @@
             .then(response => response.json())
             .then(data => {
                 const grid = document.getElementById('contenedor-grid');
-                
+
                 data.forEach((tactica) => {
                     const tarjeta = document.createElement('div');
                     tarjeta.className = 'tarjeta-tactica';
-                    tarjeta.onclick = () => copiarCoordenadas(tactica.coordenadas_raw, tarjeta);
+
+                    // Cada tarjeta conserva su propia versión de las coordenadas.
+                    let coordenadasActuales = tactica.coordenadas_raw;
+                    let estaReflejada = false;
+
+                    tarjeta.onclick = () => copiarCoordenadas(coordenadasActuales, tarjeta);
 
                     const alerta = document.createElement('div');
                     alerta.className = 'alerta-flotante';
@@ -198,47 +230,30 @@
                     const campo = document.createElement('div');
                     campo.className = 'campo-mini';
 
-                    // LÓGICA DE CENTROS PERFECTA
-                    const centroX = 109; 
-                    const centroY = 166; 
+                    // Botón Mirror: refleja X, mantiene Y y no activa la copia de la tarjeta.
+                    const botonMirror = document.createElement('button');
+                    botonMirror.className = 'boton-mirror';
+                    botonMirror.type = 'button';
+                    botonMirror.textContent = '⇄';
+                    botonMirror.title = 'Reflejar la táctica horizontalmente';
+                    botonMirror.setAttribute('aria-pressed', 'false');
+                    botonMirror.addEventListener('click', (evento) => {
+                        evento.stopPropagation();
 
-                    const pares = tactica.coordenadas_raw.split(" ");
-                    pares.forEach((par) => {
-                        const [x_mz, y_mz] = par.split(",").map(Number);
-                        
-                        const left_px = centroX + x_mz;
-                        const top_px = centroY - y_mz;
+                        coordenadasActuales = reflejarCoordenadas(coordenadasActuales);
+                        estaReflejada = !estaReflejada;
 
-                        const nodo = document.createElement('div');
-                        nodo.className = 'nodo-jugador';
-                        nodo.style.left = `${left_px}px`;
-                        nodo.style.top = `${top_px}px`;
+                        botonMirror.classList.toggle('activo', estaReflejada);
+                        botonMirror.setAttribute('aria-pressed', String(estaReflejada));
+                        botonMirror.title = estaReflejada
+                            ? 'Táctica reflejada. Pulsa para volver a la original'
+                            : 'Reflejar la táctica horizontalmente';
 
-                        // Crear la esfera base
-                        const punto = document.createElement('div');
-                        punto.className = 'jugador-punto';
-
-                        // EVALUACIÓN MATEMÁTICA INTELIGENTE POR ZONAS (Eje Y)
-                        if (y_mz <= -50) {
-                            punto.classList.add('pin-defensa'); // Azul si Y es menor o igual a -50
-                        } else if (y_mz > 50 && y_mz <= 52) {
-                            punto.classList.add('pin-medio');   // Blanco si Y está entre 51 y 52
-                        } else if (y_mz > 52) {
-                            punto.classList.add('pin-ataque');  // Rojo si Y es mayor a 52
-                        } else {
-                            // Por si alguna táctica tiene un jugador de transición en el medio campo general (ej: Y=0)
-                            punto.classList.add('pin-medio'); 
-                        }
-
-                        nodo.appendChild(punto);
-
-                        const etiqueta = document.createElement('div');
-                        etiqueta.className = 'jugador-coordenada';
-                        etiqueta.textContent = `${x_mz} ${y_mz}`;
-                        nodo.appendChild(etiqueta);
-                        
-                        campo.appendChild(nodo);
+                        dibujarJugadores(campo, coordenadasActuales);
                     });
+                    tarjeta.appendChild(botonMirror);
+
+                    dibujarJugadores(campo, coordenadasActuales);
                     tarjeta.appendChild(campo);
 
                     const info = document.createElement('div');
@@ -254,12 +269,64 @@
             })
             .catch(err => console.error("Error cargando el JSON: ", err));
 
+        // Invierte únicamente X. Pulsarlo de nuevo recupera la formación anterior.
+        function reflejarCoordenadas(rawText) {
+            return rawText.split(" ").map(par => {
+                const [x, y] = par.split(",").map(Number);
+                return `${-x},${y}`;
+            }).join(" ");
+        }
+
+        function dibujarJugadores(campo, rawText) {
+            campo.replaceChildren();
+
+            const centroX = 109;
+            const centroY = 166;
+
+            rawText.split(" ").forEach((par) => {
+                const [x_mz, y_mz] = par.split(",").map(Number);
+
+                const left_px = centroX + x_mz;
+                const top_px = centroY - y_mz;
+
+                const nodo = document.createElement('div');
+                nodo.className = 'nodo-jugador';
+                nodo.style.left = `${left_px}px`;
+                nodo.style.top = `${top_px}px`;
+
+                const punto = document.createElement('div');
+                punto.className = 'jugador-punto';
+
+                // Se conserva la clasificación visual original basada en Y.
+                if (y_mz <= -50) {
+                    punto.classList.add('pin-defensa');
+                } else if (y_mz > 50 && y_mz <= 52) {
+                    punto.classList.add('pin-medio');
+                } else if (y_mz > 52) {
+                    punto.classList.add('pin-ataque');
+                } else {
+                    punto.classList.add('pin-medio');
+                }
+
+                nodo.appendChild(punto);
+
+                const etiqueta = document.createElement('div');
+                etiqueta.className = 'jugador-coordenada';
+                etiqueta.textContent = `${x_mz} ${y_mz}`;
+                nodo.appendChild(etiqueta);
+
+                campo.appendChild(nodo);
+            });
+        }
+
         function copiarCoordenadas(rawText, tarjeta) {
             const textoFormateado = rawText.split(" ").join("\n");
             navigator.clipboard.writeText(textoFormateado).then(() => {
                 const alerta = tarjeta.querySelector('.alerta-flotante');
                 alerta.style.display = 'block';
                 setTimeout(() => { alerta.style.display = 'none'; }, 1000);
+            }).catch(err => {
+                console.error("No se pudieron copiar las coordenadas: ", err);
             });
         }
     </script>
